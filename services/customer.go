@@ -7,7 +7,6 @@ import (
 )
 
 type customerDAO interface {
-	// TODO: change to return model, not string...
 	Get(ID int) (*models.Customer, error)
 }
 
