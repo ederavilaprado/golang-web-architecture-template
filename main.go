@@ -1,11 +1,16 @@
 package main
 
 import (
+	"log"
+
 	"github.com/ederavilaprado/golang-web-architecture-template/apis"
 	"github.com/ederavilaprado/golang-web-architecture-template/daos"
 	"github.com/ederavilaprado/golang-web-architecture-template/services"
 	iris "gopkg.in/kataras/iris.v6"
 	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -35,7 +40,16 @@ func buildRouter() *iris.Framework {
 
 	appRouter := irisApp.Party("/v0")
 
-	customerDAO := daos.NewCustomerDAO()
+	// Starting DB...
+	db, err := sqlx.Connect("postgres", "user=postgres password=mysecretpassword dbname=apidb sslmode=disable")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	// TODO: put defer db.Close() somewhere
+	// db.SetMaxIdleConns(10)
+	// db.SetMaxOpenConns(10)
+
+	customerDAO := daos.NewCustomerDAO(db)
 	apis.ServeCustomerResource(appRouter, services.NewCustomerService(customerDAO))
 
 	return irisApp

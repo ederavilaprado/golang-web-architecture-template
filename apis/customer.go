@@ -1,8 +1,6 @@
 package apis
 
 import (
-	"fmt"
-
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
 
 	iris "gopkg.in/kataras/iris.v6"
@@ -24,12 +22,10 @@ func (r *customerResource) get(ctx *iris.Context) {
 
 	customer, err := r.service.Get(customerID)
 
-	fmt.Printf("=> %+v\n", customer)
-
 	if err != nil {
 		ctx.Text(500, err.Error())
 	}
-	ctx.Text(200, fmt.Sprintf("%+v", customer))
+	ctx.JSON(200, customer)
 }
 
 func ServeCustomerResource(router *iris.Router, s customerService) {

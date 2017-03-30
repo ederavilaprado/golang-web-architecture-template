@@ -1,20 +1,22 @@
 package daos
 
-import "github.com/ederavilaprado/golang-web-architecture-template/models"
+import (
+	"github.com/ederavilaprado/golang-web-architecture-template/models"
+	"github.com/jmoiron/sqlx"
+)
 
-type CustomerDAO struct{}
+type CustomerDAO struct {
+	db *sqlx.DB
+}
 
-func NewCustomerDAO() *CustomerDAO {
-	return &CustomerDAO{}
+func NewCustomerDAO(db *sqlx.DB) *CustomerDAO {
+	return &CustomerDAO{db}
 }
 
 func (dao *CustomerDAO) Get(ID int) (*models.Customer, error) {
 	customer := &models.Customer{}
-
-	customer.ID = ID
-	customer.Name = "Fake name here"
-
-	// TODO: select should come here
-
+	if err := dao.db.Get(customer, "SELECT * FROM customers WHERE id=$1", ID); err != nil {
+		return nil, err
+	}
 	return customer, nil
 }
