@@ -3,11 +3,12 @@ package services
 import (
 	"fmt"
 
+	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
 )
 
 type customerDAO interface {
-	Get(ID int) (*models.Customer, error)
+	Get(rs app.RequestScope, ID int) (*models.Customer, error)
 }
 
 type CustomerService struct {
@@ -18,9 +19,9 @@ func NewCustomerService(dao customerDAO) *CustomerService {
 	return &CustomerService{dao}
 }
 
-func (s *CustomerService) Get(ID int) (*models.Customer, error) {
+func (s *CustomerService) Get(rs app.RequestScope, ID int) (*models.Customer, error) {
 
 	fmt.Printf("=> %+v\n", "Inside CustomerService.Get...")
-	return s.dao.Get(ID)
+	return s.dao.Get(rs, ID)
 
 }

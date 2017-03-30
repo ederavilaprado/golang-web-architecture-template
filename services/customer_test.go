@@ -4,6 +4,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,12 +13,12 @@ func TestCustomerServiceGet(t *testing.T) {
 	m := newCustomerDAOMock()
 	s := NewCustomerService(m)
 
-	customer, err := s.Get(1)
+	customer, err := s.Get(nil, 1)
 	if assert.Nil(t, err) && assert.NotNil(t, customer) {
 		assert.Equal(t, "Frances Jordan", customer.Name)
 	}
 
-	customer, err = s.Get(999)
+	customer, err = s.Get(nil, 999)
 	assert.NotNil(t, err, "999 should not be an valid customer ")
 	assert.Nil(t, customer)
 }
@@ -40,7 +41,7 @@ func newCustomerDAOMock() customerDAO {
 	return m
 }
 
-func (d *customerDAOMock) Get(ID int) (*models.Customer, error) {
+func (d *customerDAOMock) Get(rs app.RequestScope, ID int) (*models.Customer, error) {
 	for _, record := range d.records {
 		if record.ID == ID {
 			return record, nil

@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/ederavilaprado/golang-web-architecture-template/apis"
+	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/daos"
 	"github.com/ederavilaprado/golang-web-architecture-template/services"
 	iris "gopkg.in/kataras/iris.v6"
@@ -35,10 +36,10 @@ func buildRouter() *iris.Framework {
 	irisApp.Adapt(iris.DevLogger())
 	irisApp.Adapt(httprouter.New())
 
-	// TODO: new Customer DAO here
-	// TODO: bind Customer DAO to service
+	irisApp.Use(app.Init())
 
-	appRouter := irisApp.Party("/v0")
+	// Creates a router group
+	rg := irisApp.Party("/v0")
 
 	// Starting DB...
 	db, err := sqlx.Connect("postgres", "user=postgres password=mysecretpassword dbname=apidb sslmode=disable")
@@ -50,7 +51,7 @@ func buildRouter() *iris.Framework {
 	// db.SetMaxOpenConns(10)
 
 	customerDAO := daos.NewCustomerDAO(db)
-	apis.ServeCustomerResource(appRouter, services.NewCustomerService(customerDAO))
+	apis.ServeCustomerResource(rg, services.NewCustomerService(customerDAO))
 
 	return irisApp
 }

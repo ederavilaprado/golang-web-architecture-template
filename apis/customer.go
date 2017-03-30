@@ -1,13 +1,14 @@
 package apis
 
 import (
+	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
 
 	iris "gopkg.in/kataras/iris.v6"
 )
 
 type customerService interface {
-	Get(id int) (*models.Customer, error)
+	Get(rs app.RequestScope, id int) (*models.Customer, error)
 }
 
 type customerResource struct {
@@ -20,7 +21,7 @@ func (r *customerResource) get(ctx *iris.Context) {
 
 	customerID, _ := ctx.ParamInt("id")
 
-	customer, err := r.service.Get(customerID)
+	customer, err := r.service.Get(app.GetRequestScope(ctx), customerID)
 
 	if err != nil {
 		ctx.Text(500, err.Error())
