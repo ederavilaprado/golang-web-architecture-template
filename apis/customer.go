@@ -3,11 +3,13 @@ package apis
 import (
 	"fmt"
 
+	"github.com/ederavilaprado/golang-web-architecture-template/models"
+
 	iris "gopkg.in/kataras/iris.v6"
 )
 
 type customerService interface {
-	Get(id int) (string, error)
+	Get(id int) (*models.Customer, error)
 }
 
 type customerResource struct {
@@ -16,6 +18,7 @@ type customerResource struct {
 
 func (r *customerResource) get(ctx *iris.Context) {
 	// TODO: parse params, etc...
+	// TODO: use some validation helper for POST methods
 
 	customerID, _ := ctx.ParamInt("id")
 
@@ -26,7 +29,7 @@ func (r *customerResource) get(ctx *iris.Context) {
 	if err != nil {
 		ctx.Text(500, err.Error())
 	}
-	ctx.Text(200, customer)
+	ctx.Text(200, fmt.Sprintf("%+v", customer))
 }
 
 func ServeCustomerResource(router *iris.Router, s customerService) {
