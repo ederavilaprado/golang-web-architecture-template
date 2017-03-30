@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/ederavilaprado/golang-web-architecture-template/apis"
+	"github.com/ederavilaprado/golang-web-architecture-template/daos"
 	"github.com/ederavilaprado/golang-web-architecture-template/services"
 	iris "gopkg.in/kataras/iris.v6"
 	"gopkg.in/kataras/iris.v6/adaptors/httprouter"
@@ -34,7 +35,8 @@ func buildRouter() *iris.Framework {
 
 	appRouter := irisApp.Party("/v0")
 
-	apis.ServeCustomerResource(appRouter, services.NewCustomerService())
+	customerDAO := daos.NewCustomerDAO()
+	apis.ServeCustomerResource(appRouter, services.NewCustomerService(customerDAO))
 
 	return irisApp
 }

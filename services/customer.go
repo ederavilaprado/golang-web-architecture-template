@@ -8,24 +8,20 @@ import (
 
 type customerDAO interface {
 	// TODO: change to return model, not string...
-	Get(ID int) (models.Customer, error)
+	Get(ID int) (*models.Customer, error)
 }
 
 type CustomerService struct {
-	// TODO: DAO must came here
+	dao customerDAO
 }
 
-func NewCustomerService() *CustomerService {
-	return &CustomerService{}
+func NewCustomerService(dao customerDAO) *CustomerService {
+	return &CustomerService{dao}
 }
 
 func (s *CustomerService) Get(ID int) (*models.Customer, error) {
 
-	c := &models.Customer{}
-	c.ID = ID
-	c.Name = "Eder Ávila Prado"
-
 	fmt.Printf("=> %+v\n", "Inside CustomerService.Get...")
+	return s.dao.Get(ID)
 
-	return c, nil
 }
