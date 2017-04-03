@@ -75,7 +75,7 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 		TokenHandler:  apis.JWTHandler,
 	}))
 
-	artistDAO := daos.NewArtistDAO()
+	artistDAO := daos.NewArtistDAO(db)
 	apis.ServeArtistResource(rg, services.NewArtistService(artistDAO))
 
 	// wire up more resource APIs here

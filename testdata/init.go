@@ -6,9 +6,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/go-ozzo/ozzo-dbx"
 	_ "github.com/lib/pq" // initialize posgresql for test
-	"github.com/ederavilaprado/golang-web-architecture-template/app"
 )
 
 var (

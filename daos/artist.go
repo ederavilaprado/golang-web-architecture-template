@@ -3,20 +3,23 @@ package daos
 import (
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
+	dbx "github.com/go-ozzo/ozzo-dbx"
 )
 
 // ArtistDAO persists artist data in database
-type ArtistDAO struct{}
+type ArtistDAO struct {
+	db *dbx.DB
+}
 
 // NewArtistDAO creates a new ArtistDAO
-func NewArtistDAO() *ArtistDAO {
-	return &ArtistDAO{}
+func NewArtistDAO(db *dbx.DB) *ArtistDAO {
+	return &ArtistDAO{db}
 }
 
 // Get reads the artist with the specified ID from the database.
 func (dao *ArtistDAO) Get(rs app.RequestScope, id int) (*models.Artist, error) {
 	var artist models.Artist
-	err := rs.Tx().Select().Model(id, &artist)
+	err := dao.db.Select().Model(id, &artist)
 	return &artist, err
 }
 
@@ -24,7 +27,7 @@ func (dao *ArtistDAO) Get(rs app.RequestScope, id int) (*models.Artist, error) {
 // The Artist.Id field will be populated with an automatically generated ID upon successful saving.
 func (dao *ArtistDAO) Create(rs app.RequestScope, artist *models.Artist) error {
 	artist.Id = 0
-	return rs.Tx().Model(artist).Insert()
+	return dao.db.Model(artist).Insert()
 }
 
 // Update saves the changes to an artist in the database.
@@ -33,7 +36,7 @@ func (dao *ArtistDAO) Update(rs app.RequestScope, id int, artist *models.Artist)
 		return err
 	}
 	artist.Id = id
-	return rs.Tx().Model(artist).Exclude("Id").Update()
+	return dao.db.Model(artist).Exclude("Id").Update()
 }
 
 // Delete deletes an artist with the specified ID from the database.
@@ -42,19 +45,19 @@ func (dao *ArtistDAO) Delete(rs app.RequestScope, id int) error {
 	if err != nil {
 		return err
 	}
-	return rs.Tx().Model(artist).Delete()
+	return dao.db.Model(artist).Delete()
 }
 
 // Count returns the number of the artist records in the database.
 func (dao *ArtistDAO) Count(rs app.RequestScope) (int, error) {
 	var count int
-	err := rs.Tx().Select("COUNT(*)").From("artist").Row(&count)
+	err := dao.db.Select("COUNT(*)").From("artist").Row(&count)
 	return count, err
 }
 
 // Query retrieves the artist records with the specified offset and limit from the database.
 func (dao *ArtistDAO) Query(rs app.RequestScope, offset, limit int) ([]models.Artist, error) {
 	artists := []models.Artist{}
-	err := rs.Tx().Select().OrderBy("id").Offset(int64(offset)).Limit(int64(limit)).All(&artists)
+	err := dao.db.Select().OrderBy("id").Offset(int64(offset)).Limit(int64(limit)).All(&artists)
 	return artists, err
 }

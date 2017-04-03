@@ -3,9 +3,9 @@ package apis
 import (
 	"strconv"
 
-	"github.com/go-ozzo/ozzo-routing"
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
+	"github.com/go-ozzo/ozzo-routing"
 )
 
 type (

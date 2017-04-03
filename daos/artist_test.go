@@ -11,7 +11,7 @@ import (
 
 func TestArtistDAO(t *testing.T) {
 	db := testdata.ResetDB()
-	dao := NewArtistDAO()
+	dao := NewArtistDAO(db)
 
 	{
 		// Get

@@ -7,10 +7,10 @@ import (
 	"testing"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/go-ozzo/ozzo-routing"
-	"github.com/go-ozzo/ozzo-routing/content"
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/testdata"
+	"github.com/go-ozzo/ozzo-routing"
+	"github.com/go-ozzo/ozzo-routing/content"
 	"github.com/stretchr/testify/assert"
 )
 

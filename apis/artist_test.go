@@ -11,7 +11,7 @@ import (
 
 func TestArtist(t *testing.T) {
 	testdata.ResetDB()
-	ServeArtistResource(&router.RouteGroup, services.NewArtistService(daos.NewArtistDAO()))
+	ServeArtistResource(&router.RouteGroup, services.NewArtistService(daos.NewArtistDAO(testdata.DB)))
 
 	notFoundError := `{"error_code":"NOT_FOUND", "message":"NOT_FOUND"}`
 	nameRequiredError := `{"error_code":"INVALID_DATA","message":"INVALID_DATA","details":[{"field":"name","error":"cannot be blank"}]}`
