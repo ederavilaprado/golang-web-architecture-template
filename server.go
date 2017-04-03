@@ -43,7 +43,7 @@ func main() {
 	http.Handle("/", buildRouter(logger, db))
 
 	// start the server
-	address := fmt.Sprintf(":%v", app.Config.ServerPort)
+	address := fmt.Sprintf("localhost:%v", app.Config.ServerPort)
 	logger.Infof("server %v is started at %v\n", app.Version, address)
 	panic(http.ListenAndServe(address, nil))
 }

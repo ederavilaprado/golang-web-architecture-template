@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/ederavilaprado/golang-web-architecture-template/errors"
 	"github.com/go-ozzo/ozzo-routing"
 	"github.com/go-ozzo/ozzo-routing/access"
 	"github.com/go-ozzo/ozzo-routing/fault"
 	"github.com/go-ozzo/ozzo-validation"
-	"github.com/ederavilaprado/golang-web-architecture-template/errors"
 )
 
 // Init returns a middleware that prepares the request context and processing environment.
@@ -21,7 +21,11 @@ func Init(logger *logrus.Logger) routing.Handler {
 	return func(rc *routing.Context) error {
 		now := time.Now()
 
-		rc.Response = &access.LogResponseWriter{rc.Response, http.StatusOK, 0}
+		rc.Response = &access.LogResponseWriter{
+			ResponseWriter: rc.Response,
+			Status:         http.StatusOK,
+			BytesWritten:   0,
+		}
 
 		ac := newRequestScope(now, logger, rc.Request)
 		rc.Set("Context", ac)

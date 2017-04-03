@@ -1,9 +1,9 @@
 # MAIN_VERSION:=$(shell git describe --abbrev=0 --tags || echo "0.1")
 # VERSION:=${MAIN_VERSION}\#$(shell git log -n 1 --pretty=format:"%h")
-# PACKAGES:=$(shell go list ./... | sed -n '1!p' | grep -v /vendor/)
+PACKAGES:=$(shell go list ./... | sed -n '1!p' | grep -v /vendor/)
 # LDFLAGS:=-ldflags "-X github.com/ederavilaprado/golang-web-architecture-template/app.Version=${VERSION}"
 
-default: run
+default: dev
 
 depends:
 	../../../../bin/glide up
@@ -21,7 +21,7 @@ run:
 	go run ${LDFLAGS} server.go
 
 dev:
-	CompileDaemon -exclude-dir ".git" -build "go build -o server" -command "./server"
+	CompileDaemon -exclude-dir ".git" -color -build "go build -o server" -command "./server"
 
 # build: clean
 # 	go build ${LDFLAGS} -a -o server server.go
