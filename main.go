@@ -37,7 +37,6 @@ func main() {
 	logger := logrus.New()
 
 	// Starting DB...
-	// db, err := sqlx.Connect("postgres", "user=postgres password=mysecretpassword dbname=apidb sslmode=disable")
 	db, err := sqlx.Connect("postgres", app.Config.DSN)
 	if err != nil {
 		log.Fatalln(err)
@@ -51,8 +50,8 @@ func main() {
 	http.Handle("/", buildRouter(logger, db))
 
 	// start the server
-	address := fmt.Sprintf("localhost:%v", app.Config.Port)
-	logger.Infof("server %v is started at %v\n", app.Version, address)
+	address := fmt.Sprintf("%v:%v", app.Config.Host, app.Config.Port)
+	logger.Infof("Server (%v) is started at %v\n", app.Version, address)
 	panic(http.ListenAndServe(address, nil))
 }
 
