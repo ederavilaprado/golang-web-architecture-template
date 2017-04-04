@@ -21,21 +21,17 @@ import (
 func main() {
 	// loading app flags before start the server
 	app.LoadAppFlags()
-
 	// load application configurations
 	if err := app.LoadConfig(); err != nil {
 		panic(fmt.Errorf("Invalid application configuration: %s", err))
 	}
-
 	// load error messages
 	if err := errors.LoadMessages(app.Config.ErrorFile); err != nil {
 		panic(fmt.Errorf("Failed to read the error message file: %s", err))
 	}
-
-	// create the logger
+	// creating the logger
 	logger := logrus.New()
-
-	// Starting DB...
+	// starting DB...
 	db, err := sqlx.Connect("postgres", app.Config.DSN)
 	if err != nil {
 		log.Fatalln(err)
