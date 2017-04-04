@@ -1,0 +1,21 @@
+# To change any variable, you always need to use the prefix (the prefix is set inside the file "app/config.go")
+# and also all letters should be upper case.
+#   Example:
+#     - To change the dsn var, you need to export an env var "SERVER_DSN", because by default the prefix is APP
+
+# The Data Source Name for the database
+dsn: "postgres://postgres:postgres@127.0.0.1:5432/go_restful?sslmode=disable"
+
+
+# These are secret keys used for JWT signing and verification.
+# Make sure you override these keys in production by the following environment variables:
+#   RESTFUL_JWT_VERIFICATION_KEY
+#   RESTFUL_JWT_SIGNING_KEY
+jwt_verification_key: "QfCAH04Cob7b71QCqy738vw5XGSnFZ9d"
+jwt_signing_key: "QfCAH04Cob7b71QCqy738vw5XGSnFZ9d"
+# Uncomment the following line and set an appropriate JWT signing method, if needed
+# The default signing method is HS256.
+#jwt_signing_method: "HS256"
+
+host: localhost
+port: 8080

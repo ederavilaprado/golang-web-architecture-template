@@ -1,52 +1,86 @@
 package app
 
 import (
-	"fmt"
+	"database/sql"
 	"net/http"
 	"time"
+
+	"github.com/Sirupsen/logrus"
 )
 
+// RequestScope contains the application-specific information that are carried around in a request.
 type RequestScope interface {
-	// TODO: logger should came here
-
-	// TODO: DB should came here, so we can use transactions
-	// DB *sqlx.DB
-
+	Logger
+	// UserID returns the ID of the user for the current request
+	UserID() string
+	// SetUserID sets the ID of the currently authenticated user
+	SetUserID(id string)
+	// RequestID returns the ID of the current request
 	RequestID() string
+	// Tx returns the currently active database transaction that can be used for DB query purpose
+	Tx() *sql.Tx
+	// SetTx sets the database transaction
+	SetTx(tx *sql.Tx)
+	// Rollback returns a value indicating whether the current database transaction should be rolled back
+	Rollback() bool
+	// SetRollback sets a value indicating whether the current database transaction should be rolled back
+	SetRollback(bool)
+	// Now returns the timestamp representing the time when the request is being processed
 	Now() time.Time
 }
 
 type requestScope struct {
-	now       time.Time
-	requestID string
+	Logger              // the logger tagged with the current request information
+	now       time.Time // the time when the request is being processed
+	requestID string    // an ID identifying one or multiple correlated HTTP requests
+	userID    string    // an ID identifying the current user
+	rollback  bool      // whether to roll back the current transaction
+	tx        *sql.Tx   // the currently active transaction
+}
+
+func (rs *requestScope) UserID() string {
+	return rs.userID
+}
+
+func (rs *requestScope) SetUserID(id string) {
+	rs.Logger.SetField("UserID", id)
+	rs.userID = id
 }
 
 func (rs *requestScope) RequestID() string {
 	return rs.requestID
 }
 
+func (rs *requestScope) Tx() *sql.Tx {
+	return rs.tx
+}
+
+func (rs *requestScope) SetTx(tx *sql.Tx) {
+	rs.tx = tx
+}
+
+func (rs *requestScope) Rollback() bool {
+	return rs.rollback
+}
+
+func (rs *requestScope) SetRollback(v bool) {
+	rs.rollback = v
+}
+
 func (rs *requestScope) Now() time.Time {
 	return rs.now
 }
 
-func newRequestScope(now time.Time, request *http.Request) RequestScope {
-	// l := NewLogger(logger, logrus.Fields{})
+// newRequestScope creates a new RequestScope with the current request information.
+func newRequestScope(now time.Time, logger *logrus.Logger, request *http.Request) RequestScope {
+	l := NewLogger(logger, logrus.Fields{})
 	requestID := request.Header.Get("X-Request-Id")
-	// if requestID != "" {
-	// 	l.SetField("RequestID", requestID)
-	// }
-
-	// TODO: remove this here
-	if requestID == "" {
-		requestID = "ederrequestxxxxxx"
+	if requestID != "" {
+		l.SetField("RequestID", requestID)
 	}
-
-	fmt.Printf("=> %+v\n", "newRequestScope")
-	fmt.Printf("=> %+v\n", requestID)
-
 	return &requestScope{
+		Logger:    l,
 		now:       now,
 		requestID: requestID,
 	}
-
 }
