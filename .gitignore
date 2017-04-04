@@ -23,5 +23,6 @@ _testmain.go
 *.test
 *.prof
 
+server
 _build_hot_reload
 coverage*

@@ -3,8 +3,8 @@ package apis
 import (
 	"strconv"
 
-	"github.com/go-ozzo/ozzo-routing"
 	"github.com/ederavilaprado/golang-web-architecture-template/util"
+	routing "github.com/go-ozzo/ozzo-routing"
 )
 
 const (

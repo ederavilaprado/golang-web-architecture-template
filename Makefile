@@ -6,7 +6,7 @@ LDFLAGS:=-ldflags "-X github.com/ederavilaprado/golang-web-architecture-template
 default: dev
 
 depends:
-	../../../../bin/glide up
+	glide up
 
 test:
 	echo "mode: count" > coverage-all.out
@@ -23,8 +23,8 @@ run:
 dev:
 	CompileDaemon -exclude-dir ".git" -color -build "go build -o _build_hot_reload" -command "./_build_hot_reload"
 
-# build: clean
-# 	go build ${LDFLAGS} -a -o api main.go
+build: clean
+	go build ${LDFLAGS} -a -o server main.go
 
 clean:
 	rm -rf _build_hot_reload coverage.out coverage-all.out
