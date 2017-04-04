@@ -1,6 +1,8 @@
 package services
 
 import (
+	"fmt"
+
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
 )
@@ -44,6 +46,7 @@ func (s *ArtistService) Create(rs app.RequestScope, model *models.Artist) (*mode
 	if err := s.dao.Create(rs, model); err != nil {
 		return nil, err
 	}
+	fmt.Printf("=> %+v\n", model.Id)
 	return s.dao.Get(rs, model.Id)
 }
 

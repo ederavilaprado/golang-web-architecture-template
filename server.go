@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
@@ -10,11 +11,11 @@ import (
 	"github.com/ederavilaprado/golang-web-architecture-template/daos"
 	"github.com/ederavilaprado/golang-web-architecture-template/errors"
 	"github.com/ederavilaprado/golang-web-architecture-template/services"
-	"github.com/go-ozzo/ozzo-dbx"
 	"github.com/go-ozzo/ozzo-routing"
 	"github.com/go-ozzo/ozzo-routing/auth"
 	"github.com/go-ozzo/ozzo-routing/content"
 	"github.com/go-ozzo/ozzo-routing/cors"
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
@@ -32,12 +33,23 @@ func main() {
 	// create the logger
 	logger := logrus.New()
 
-	// connect to the database
-	db, err := dbx.MustOpen("postgres", app.Config.DSN)
+	// // connect to the database
+	// db, err := dbx.MustOpen("postgres", app.Config.DSN)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// Starting DB...
+	// db, err := sqlx.Connect("postgres", "user=postgres password=mysecretpassword dbname=apidb sslmode=disable")
+	db, err := sqlx.Connect("postgres", app.Config.DSN)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
-	db.LogFunc = logger.Infof
+	// TODO: put defer db.Close() somewhere
+	// db.SetMaxIdleConns(10)
+	// db.SetMaxOpenConns(10)
+
+	// // TODO: log db
+	// db.LogFunc = logger.Infof
 
 	// wire up API routing
 	http.Handle("/", buildRouter(logger, db))
@@ -48,7 +60,7 @@ func main() {
 	panic(http.ListenAndServe(address, nil))
 }
 
-func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
+func buildRouter(logger *logrus.Logger, db *sqlx.DB) *routing.Router {
 	router := routing.New()
 
 	router.To("GET,HEAD", "/ping", func(c *routing.Context) error {
@@ -64,7 +76,8 @@ func buildRouter(logger *logrus.Logger, db *dbx.DB) *routing.Router {
 			AllowHeaders: "*",
 			AllowMethods: "*",
 		}),
-		app.Transactional(db),
+		// TODO: create an middleware helper for transaction...
+		// app.Transactional(db),
 	)
 
 	rg := router.Group("/v1")

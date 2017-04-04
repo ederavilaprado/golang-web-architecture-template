@@ -1,13 +1,14 @@
 package daos
 
 import (
+	"database/sql"
 	"time"
 
-	"github.com/go-ozzo/ozzo-dbx"
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
+	"github.com/jmoiron/sqlx"
 )
 
-func testDBCall(db *dbx.DB, f func(rs app.RequestScope)) {
+func testDBCall(db *sqlx.DB, f func(rs app.RequestScope)) {
 	rs := mockRequestScope(db)
 
 	defer func() {
@@ -19,10 +20,10 @@ func testDBCall(db *dbx.DB, f func(rs app.RequestScope)) {
 
 type requestScope struct {
 	app.Logger
-	tx *dbx.Tx
+	tx *sql.Tx
 }
 
-func mockRequestScope(db *dbx.DB) app.RequestScope {
+func mockRequestScope(db *sqlx.DB) app.RequestScope {
 	tx, _ := db.Begin()
 	return &requestScope{
 		tx: tx,
@@ -40,11 +41,11 @@ func (rs *requestScope) RequestID() string {
 	return "test"
 }
 
-func (rs *requestScope) Tx() *dbx.Tx {
+func (rs *requestScope) Tx() *sql.Tx {
 	return rs.tx
 }
 
-func (rs *requestScope) SetTx(tx *dbx.Tx) {
+func (rs *requestScope) SetTx(tx *sql.Tx) {
 	rs.tx = tx
 }
 

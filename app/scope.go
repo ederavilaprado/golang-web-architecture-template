@@ -1,11 +1,11 @@
 package app
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/go-ozzo/ozzo-dbx"
 )
 
 // RequestScope contains the application-specific information that are carried around in a request.
@@ -18,9 +18,9 @@ type RequestScope interface {
 	// RequestID returns the ID of the current request
 	RequestID() string
 	// Tx returns the currently active database transaction that can be used for DB query purpose
-	Tx() *dbx.Tx
+	Tx() *sql.Tx
 	// SetTx sets the database transaction
-	SetTx(tx *dbx.Tx)
+	SetTx(tx *sql.Tx)
 	// Rollback returns a value indicating whether the current database transaction should be rolled back
 	Rollback() bool
 	// SetRollback sets a value indicating whether the current database transaction should be rolled back
@@ -35,7 +35,7 @@ type requestScope struct {
 	requestID string    // an ID identifying one or multiple correlated HTTP requests
 	userID    string    // an ID identifying the current user
 	rollback  bool      // whether to roll back the current transaction
-	tx        *dbx.Tx   // the currently active transaction
+	tx        *sql.Tx   // the currently active transaction
 }
 
 func (rs *requestScope) UserID() string {
@@ -51,11 +51,11 @@ func (rs *requestScope) RequestID() string {
 	return rs.requestID
 }
 
-func (rs *requestScope) Tx() *dbx.Tx {
+func (rs *requestScope) Tx() *sql.Tx {
 	return rs.tx
 }
 
-func (rs *requestScope) SetTx(tx *dbx.Tx) {
+func (rs *requestScope) SetTx(tx *sql.Tx) {
 	rs.tx = tx
 }
 

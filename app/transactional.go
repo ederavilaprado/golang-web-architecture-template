@@ -1,17 +1,18 @@
 package app
 
 import (
-	"github.com/go-ozzo/ozzo-dbx"
 	"github.com/go-ozzo/ozzo-routing"
 	"github.com/go-ozzo/ozzo-routing/fault"
+	"github.com/jmoiron/sqlx"
 )
 
 // Transactional returns a handler that encloses the nested handlers with a DB transaction.
 // If a nested handler returns an error or a panic happens, it will rollback the transaction.
 // Otherwise it will commit the transaction after the nested handlers finish execution.
 // By calling app.Context.SetRollback(true), you may also explicitly request to rollback the transaction.
-func Transactional(db *dbx.DB) routing.Handler {
+func Transactional(db *sqlx.DB) routing.Handler {
 	return func(c *routing.Context) error {
+		// TODO: Improve this code to not use transaction for every single request of the api
 		tx, err := db.Begin()
 		if err != nil {
 			return err
