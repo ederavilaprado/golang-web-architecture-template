@@ -30,3 +30,11 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTEyNTUyNzQsImlkIjoiMTAwIiwibmF
 curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTEyNTUyNzQsImlkIjoiMTAwIiwibmFtZSI6ImRlbW8ifQ.90mklqO3anYDjps-h7bY7GQORHnSwGP2a3_P7EqxusM" http://localhost:8080/v1/artists
 curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTEyNTUyNzQsImlkIjoiMTAwIiwibmFtZSI6ImRlbW8ifQ.90mklqO3anYDjps-h7bY7GQORHnSwGP2a3_P7EqxusM" http://localhost:8080/v1/artists/10
 ```
+
+Following the good patterns like S.O.L.I.D. and Clean Architecture, with many thanks to Uncle Bob (https://twitter.com/unclebobmartin) and also Dave Cheney (https://twitter.com/davecheney)
+- https://8thlight.com/blog/uncle-bob/
+- https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
+- https://8thlight.com/blog/uncle-bob/2014/05/08/SingleReponsibilityPrinciple.html
+- https://www.youtube.com/watch?v=zzAdEt3xZ1M
+
+Hardly inspired by https://github.com/qiangxue/golang-restful-starter-kit
