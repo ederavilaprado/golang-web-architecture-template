@@ -1,0 +1,21 @@
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace=true
+
+[*.go]
+indent_style = tab
+# only for visual identation, not using two tabs
+indent_size = 2
+
+[Makefile]
+indent_style = tab
+
+# Indentation override for all JS under lib directory
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
