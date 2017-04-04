@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -12,7 +13,28 @@ import (
 	"github.com/go-ozzo/ozzo-routing/access"
 	"github.com/go-ozzo/ozzo-routing/fault"
 	"github.com/go-ozzo/ozzo-validation"
+	"github.com/ogier/pflag"
 )
+
+// ConfigFile is the config file when specified, otherwhise the config will be loaded from the default place.
+// See "app/config.go" for more information.
+var ConfigFile *string
+
+// LoadAppFlags load all the app flags
+func LoadAppFlags() {
+	configFile := pflag.StringP("config", "c", "", "Config file for the server")
+	showVersion := pflag.BoolP("version", "v", false, "Version of the server")
+	pflag.Parse()
+	// print version with the flag: --version
+	if *showVersion {
+		fmt.Printf("v%s\n", Version)
+		os.Exit(0)
+	}
+	// export configFile if present
+	if *configFile != "" {
+		ConfigFile = configFile
+	}
+}
 
 // Init returns a middleware that prepares the request context and processing environment.
 // The middleware will populate RequestContext, handle possible panics and errors from the processing

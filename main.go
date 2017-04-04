@@ -20,8 +20,11 @@ import (
 )
 
 func main() {
+	// loading app flags before start the server
+	app.LoadAppFlags()
+
 	// load application configurations
-	if err := app.LoadConfig("./config"); err != nil {
+	if err := app.LoadConfig(); err != nil {
 		panic(fmt.Errorf("Invalid application configuration: %s", err))
 	}
 
@@ -33,29 +36,22 @@ func main() {
 	// create the logger
 	logger := logrus.New()
 
-	// // connect to the database
-	// db, err := dbx.MustOpen("postgres", app.Config.DSN)
-	// if err != nil {
-	// 	panic(err)
-	// }
 	// Starting DB...
 	// db, err := sqlx.Connect("postgres", "user=postgres password=mysecretpassword dbname=apidb sslmode=disable")
 	db, err := sqlx.Connect("postgres", app.Config.DSN)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	// TODO: put defer db.Close() somewhere
+	defer db.Close()
+	// // TODO: find a good number for the connection pool
 	// db.SetMaxIdleConns(10)
 	// db.SetMaxOpenConns(10)
-
-	// // TODO: log db
-	// db.LogFunc = logger.Infof
 
 	// wire up API routing
 	http.Handle("/", buildRouter(logger, db))
 
 	// start the server
-	address := fmt.Sprintf("localhost:%v", app.Config.ServerPort)
+	address := fmt.Sprintf("localhost:%v", app.Config.Port)
 	logger.Infof("server %v is started at %v\n", app.Version, address)
 	panic(http.ListenAndServe(address, nil))
 }
@@ -81,6 +77,8 @@ func buildRouter(logger *logrus.Logger, db *sqlx.DB) *routing.Router {
 	)
 
 	rg := router.Group("/v1")
+
+	// TODO: JWT + Session here...
 
 	rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
 	rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
