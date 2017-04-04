@@ -46,7 +46,9 @@ func LoadConfig() error {
 		v.SetConfigFile(*ConfigFile)
 	} else {
 		// whit this 3, wee will have the config side by side with the binary: ./config/config.yaml
-		v.AddConfigPath("config")
+		// also it's important to keep this two here to use by the tests
+		v.AddConfigPath("./config")
+		v.AddConfigPath("../config")
 		v.SetConfigName("config")
 		v.SetConfigType("yaml")
 	}

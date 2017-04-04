@@ -12,12 +12,13 @@ import (
 )
 
 var (
+	// DB is the connection for the temp database used in tests
 	DB *sqlx.DB
 )
 
 func init() {
 	// the test may be started from the home directory or a subdirectory
-	err := app.LoadConfig("./config", "../config")
+	err := app.LoadConfig()
 	if err != nil {
 		panic(err)
 	}
