@@ -12,7 +12,6 @@ import (
 	"github.com/ederavilaprado/golang-web-architecture-template/errors"
 	"github.com/ederavilaprado/golang-web-architecture-template/services"
 	"github.com/go-ozzo/ozzo-routing"
-	"github.com/go-ozzo/ozzo-routing/auth"
 	"github.com/go-ozzo/ozzo-routing/content"
 	"github.com/go-ozzo/ozzo-routing/cors"
 	"github.com/jmoiron/sqlx"
@@ -58,7 +57,9 @@ func main() {
 func buildRouter(logger *logrus.Logger, db *sqlx.DB) *routing.Router {
 	router := routing.New()
 
-	router.To("GET,HEAD", "/ping", func(c *routing.Context) error {
+	// TODO: implement 2 variables to healthcheck... one "completely" open,
+	// another closed and with the power to check the entire status of the app
+	router.To("GET,HEAD", "/health", func(c *routing.Context) error {
 		c.Abort() // skip all other middlewares/handlers
 		return c.Write("OK " + app.Version)
 	})
@@ -80,10 +81,10 @@ func buildRouter(logger *logrus.Logger, db *sqlx.DB) *routing.Router {
 	// TODO: JWT + Session here...
 
 	rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
-	rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
-		SigningMethod: app.Config.JWTSigningMethod,
-		TokenHandler:  apis.JWTHandler,
-	}))
+	// rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
+	// 	SigningMethod: app.Config.JWTSigningMethod,
+	// 	TokenHandler:  apis.JWTHandler,
+	// }))
 
 	artistDAO := daos.NewArtistDAO(db)
 	apis.ServeArtistResource(rg, services.NewArtistService(artistDAO))
