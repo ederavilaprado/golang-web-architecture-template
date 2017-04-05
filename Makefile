@@ -1,17 +1,20 @@
 MAIN_VERSION:=$(shell git describe --abbrev=0 --tags || echo "0.1.0")
-VERSION:=${MAIN_VERSION}\#$(shell git log -n 1 --pretty=format:"%h")
-PACKAGES:=$(shell go list ./... | sed -n '1!p' | grep -v /vendor/)
+VERSION:=${MAIN_VERSION}
+PACKAGES:=$(shell go list ./... | sed -n '1!p' | grep -v './vendor')
+PACKAGE_WITHOUT_E2E:=$(shell go list ./... | sed -n '1!p' | grep -v -E '(./vendor|./testdata|./daos|./apis)')
 LDFLAGS:=-ldflags "-X github.com/ederavilaprado/golang-web-architecture-template/app.Version=${VERSION}"
 
 default: test
 
 deps:
-	go get -v ./...
 	go get -v github.com/stretchr/testify/assert
-	# glide up
+	go get -v .
 
 test:
-	$(foreach pkg,$(PACKAGES), go test -p=1 ${pkg};)
+	go test -p=1 $(PACKAGES)
+
+unit-test:
+	go test $(PACKAGE_WITHOUT_E2E)
 
 cover:
 	echo "mode: count" > coverage-all.out
