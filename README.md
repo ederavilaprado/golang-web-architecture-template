@@ -1,5 +1,7 @@
 # golang-web-architecture-template
 
+[![Build Status](https://travis-ci.org/ederavilaprado/golang-web-architecture-template.svg?branch=master)](https://travis-ci.org/ederavilaprado/golang-web-architecture-template)
+
 ```bash
 $ docker run -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=go_restful -p 5432:5432 -d postgres
 ```
