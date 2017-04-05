@@ -7,6 +7,7 @@ LDFLAGS:=-ldflags "-X github.com/ederavilaprado/golang-web-architecture-template
 default: test
 
 deps:
+	go get -v github.com/stretchr/testify/assert
 	go get -v .
 
 test:
