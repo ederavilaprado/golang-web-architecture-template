@@ -1,0 +1,19 @@
+language: go
+sudo: required
+go:
+  - 1.8
+install:
+  - make deps
+before_script:
+  - psql -c 'create database go_restful;' -U postgres
+script:
+  # - make deps
+  - make test
+env:
+  - SERVER_DSN="postgres://127.0.0.1/go_restful?sslmode=disable"
+services:
+  - postgresql
+addons:
+  postgresql: "9.4"
+notifications:
+  email: true
