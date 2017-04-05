@@ -2,6 +2,21 @@
 
 [![Build Status](https://travis-ci.org/ederavilaprado/golang-web-architecture-template.svg?branch=master)](https://travis-ci.org/ederavilaprado/golang-web-architecture-template)
 
+## TODO
+
+- [ ] improve readme
+- [ ] request scope + reques id
+- [ ] log for request/response
+- [ ] log to file
+- [ ] struct, params and querystring validation
+- [ ] change httprouter to "echo"
+- [ ] handling errors
+- [ ] graceful shutdown
+- [ ] swagger
+- [ ] migrations
+- [ ] metrics (with influxdb or prometheus)
+
+
 ```bash
 $ docker run -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=go_restful -p 5432:5432 -d postgres
 ```
@@ -37,6 +52,8 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTEyNTUyNzQsImlkIjoiMTAwIiwibmF
 curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTEyNTUyNzQsImlkIjoiMTAwIiwibmFtZSI6ImRlbW8ifQ.90mklqO3anYDjps-h7bY7GQORHnSwGP2a3_P7EqxusM" http://localhost:8080/v1/artists
 curl -X GET -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0OTEyNTUyNzQsImlkIjoiMTAwIiwibmFtZSI6ImRlbW8ifQ.90mklqO3anYDjps-h7bY7GQORHnSwGP2a3_P7EqxusM" http://localhost:8080/v1/artists/10
 ```
+
+
 
 Following the good patterns like S.O.L.I.D. and Clean Architecture, with many thanks to Uncle Bob (https://twitter.com/unclebobmartin) and also Dave Cheney (https://twitter.com/davecheney)
 - https://8thlight.com/blog/uncle-bob/
