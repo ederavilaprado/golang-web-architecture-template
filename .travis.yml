@@ -16,3 +16,6 @@ addons:
   postgresql: "9.4"
 notifications:
   email: true
+branches:
+  only:
+    - master
