@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
@@ -33,7 +32,7 @@ func main() {
 	// starting DB...
 	db, err := sqlx.Connect("postgres", app.Config.DSN)
 	if err != nil {
-		log.Fatalln(err)
+		logger.Fatalln(err)
 	}
 	defer db.Close()
 	// // TODO: find a good number for the connection pool
