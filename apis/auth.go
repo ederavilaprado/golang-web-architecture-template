@@ -4,11 +4,12 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-ozzo/ozzo-routing"
-	"github.com/go-ozzo/ozzo-routing/auth"
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/errors"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
+	"github.com/go-ozzo/ozzo-routing"
+	"github.com/go-ozzo/ozzo-routing/auth"
+	"github.com/labstack/echo"
 )
 
 type Credential struct {
@@ -50,7 +51,7 @@ func authenticate(c Credential) models.Identity {
 	return nil
 }
 
-func JWTHandler(c *routing.Context, j *jwt.Token) error {
+func JWTHandler(c echo.Context, j *jwt.Token) error {
 	userID := j.Claims.(jwt.MapClaims)["id"].(string)
 	app.GetRequestScope(c).SetUserID(userID)
 	return nil
