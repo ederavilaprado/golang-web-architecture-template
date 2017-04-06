@@ -11,6 +11,8 @@ import (
 var Config appConfig
 
 type appConfig struct {
+	// debug mode
+	Debug bool `mapstructure:"debug"`
 	// the path to the error message file. Defaults to "config/errors.yaml"
 	ErrorFile string `mapstructure:"error_file"`
 	// the server host bind, defaults to localhost
@@ -56,6 +58,7 @@ func LoadConfig() error {
 	v.SetEnvPrefix("server")
 	v.AutomaticEnv()
 	// defaults if not present inside the config file or with the env variables
+	v.SetDefault("debug", "false")
 	v.SetDefault("error_file", "config/errors.yaml")
 	v.SetDefault("host", "localhost")
 	v.SetDefault("port", 8080)

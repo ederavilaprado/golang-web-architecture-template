@@ -52,9 +52,9 @@ func main() {
 func buildRouter(logger *logrus.Logger, db *sqlx.DB) *echo.Echo {
 
 	router := echo.New()
-	// TODO: check this from config...
+
 	// When running in debug mode,the returned JSON is always "pretty printed"
-	router.Debug = true
+	router.Debug = app.Config.Debug
 
 	// Removing unnecessary trailing slash at the end of the path
 	router.Pre(middleware.RemoveTrailingSlash())
@@ -70,16 +70,19 @@ func buildRouter(logger *logrus.Logger, db *sqlx.DB) *echo.Echo {
 	// 	return c.Write("OK " + app.Version)
 	// })
 
-	// TODO: Auth middleware
-	// TODO: context middleware
-	// TODO: add cors
-	// TODO: add handler panic recovery
-	// TODO: stats URL
-	// TODO: centralized log also for the router
-
 	router.Use(
 		app.Init(logger),
+		middleware.RecoverWithConfig(middleware.RecoverConfig{
+			StackSize: 1 << 10, // 1 KB
+		}),
 	)
+
+	// Handling all the panic errors for the api
+	// Needs the "recover" middleware
+	router.HTTPErrorHandler = func(err error, c echo.Context) {
+		c.HTML(http.StatusInternalServerError, "Internal Server Error... from panic")
+	}
+
 	// 	// content.TypeNegotiator(content.JSON),
 	// 	cors.Handler(cors.Options{
 	// 		AllowOrigins: "*",

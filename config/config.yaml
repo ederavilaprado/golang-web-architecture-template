@@ -3,6 +3,8 @@
 #   Example:
 #     - To change the dsn var, you need to export an env var "SERVER_DSN", because by default the prefix is APP
 
+debug: true
+
 # The Data Source Name for the database
 dsn: "postgres://postgres:postgres@127.0.0.1:5432/go_restful?sslmode=disable"
 

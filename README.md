@@ -9,14 +9,20 @@
 - [ ] log to file
 - [ ] struct, params and querystring validation
 - [x] change httprouter to "echo"
-- [ ] handling errors
+- [ ] handling errors (centralized error)
 - [ ] graceful shutdown with https://github.com/facebookgo/grace
 - [ ] swagger
 - [ ] migrations
 - [ ] metrics (with influxdb or prometheus)
 - [ ] Change the api json for query from snake case to camel case.
+- [ ] Auth handler
 - [ ] Helper to return json ?!?
 - [ ] improve readme
+- [ ] /stats url
+- [x] Handling panic errors
+- [ ] Add cors
+- [ ] logger to echo.logger
+- [ ] Context middleware
 
 
 ```bash
