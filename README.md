@@ -4,17 +4,19 @@
 
 ## TODO
 
-- [ ] improve readme
 - [ ] request scope + reques id
 - [ ] log for request/response
 - [ ] log to file
 - [ ] struct, params and querystring validation
-- [ ] change httprouter to "echo"
+- [x] change httprouter to "echo"
 - [ ] handling errors
-- [ ] graceful shutdown
+- [ ] graceful shutdown with https://github.com/facebookgo/grace
 - [ ] swagger
 - [ ] migrations
 - [ ] metrics (with influxdb or prometheus)
+- [ ] Change the api json for query from snake case to camel case.
+- [ ] Helper to return json ?!?
+- [ ] improve readme
 
 
 ```bash
