@@ -8,9 +8,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
-	"github.com/ederavilaprado/golang-web-architecture-template/testdata"
-	"github.com/go-ozzo/ozzo-routing"
-	"github.com/go-ozzo/ozzo-routing/content"
+	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -23,18 +21,20 @@ type apiTestCase struct {
 	response string
 }
 
-var router *routing.Router
+var router *echo.Echo
+
+// TODO: for this kind of test, the echo framework has a tooltip
 
 func init() {
 	logger := logrus.New()
 	logger.Level = logrus.PanicLevel
 
-	router = routing.New()
+	router = echo.New()
 
 	router.Use(
 		app.Init(logger),
-		content.TypeNegotiator(content.JSON),
-		app.Transactional(testdata.DB),
+		// content.TypeNegotiator(content.JSON),
+		// app.Transactional(testdata.DB),
 	)
 }
 

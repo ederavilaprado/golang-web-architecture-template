@@ -1,11 +1,12 @@
 package apis
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
-	"github.com/go-ozzo/ozzo-routing"
+	"github.com/labstack/echo"
 )
 
 type (
@@ -25,31 +26,29 @@ type (
 	}
 )
 
-// ServeArtist sets up the routing of artist endpoints and the corresponding handlers.
-func ServeArtistResource(rg *routing.RouteGroup, service artistService) {
+// ServeArtistResource sets up the routing of artist endpoints and the corresponding handlers.
+func ServeArtistResource(rg *echo.Group, service artistService) {
 	r := &artistResource{service}
-	rg.Get("/artists/<id>", r.get)
-	rg.Get("/artists", r.query)
-	rg.Post("/artists", r.create)
-	rg.Put("/artists/<id>", r.update)
-	rg.Delete("/artists/<id>", r.delete)
+	rg.GET("/artists/:id", r.get)
+	rg.GET("/artists", r.query)
+	rg.POST("/artists", r.create)
+	rg.PUT("/artists/:id", r.update)
+	rg.DELETE("/artists/:id", r.delete)
 }
 
-func (r *artistResource) get(c *routing.Context) error {
+func (r *artistResource) get(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
-
-	response, err := r.service.Get(app.GetRequestScope(c), id)
+	artist, err := r.service.Get(app.GetRequestScope(c), id)
 	if err != nil {
 		return err
 	}
-
-	return c.Write(response)
+	return c.JSON(http.StatusOK, artist)
 }
 
-func (r *artistResource) query(c *routing.Context) error {
+func (r *artistResource) query(c echo.Context) error {
 	rs := app.GetRequestScope(c)
 	count, err := r.service.Count(rs)
 	if err != nil {
@@ -61,57 +60,49 @@ func (r *artistResource) query(c *routing.Context) error {
 		return err
 	}
 	paginatedList.Items = items
-	return c.Write(paginatedList)
+	return c.JSON(http.StatusOK, paginatedList)
 }
 
-func (r *artistResource) create(c *routing.Context) error {
-	var model models.Artist
-	if err := c.Read(&model); err != nil {
+func (r *artistResource) create(c echo.Context) error {
+	payload := &models.Artist{}
+	if err := c.Bind(payload); err != nil {
 		return err
 	}
-	response, err := r.service.Create(app.GetRequestScope(c), &model)
+	artist, err := r.service.Create(app.GetRequestScope(c), payload)
 	if err != nil {
 		return err
 	}
-
-	return c.Write(response)
+	return c.JSON(http.StatusCreated, artist)
 }
 
-func (r *artistResource) update(c *routing.Context) error {
+func (r *artistResource) update(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
-
 	rs := app.GetRequestScope(c)
-
 	model, err := r.service.Get(rs, id)
 	if err != nil {
 		return err
 	}
-
-	if err := c.Read(model); err != nil {
+	if err = c.Bind(model); err != nil {
 		return err
 	}
-
 	response, err := r.service.Update(rs, id, model)
 	if err != nil {
 		return err
 	}
-
-	return c.Write(response)
+	return c.JSON(http.StatusOK, response)
 }
 
-func (r *artistResource) delete(c *routing.Context) error {
+func (r *artistResource) delete(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return err
 	}
-
 	response, err := r.service.Delete(app.GetRequestScope(c), id)
 	if err != nil {
 		return err
 	}
-
-	return c.Write(response)
+	return c.JSON(http.StatusOK, response)
 }

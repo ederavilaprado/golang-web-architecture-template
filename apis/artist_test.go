@@ -11,7 +11,7 @@ import (
 
 func TestArtist(t *testing.T) {
 	testdata.ResetDB()
-	ServeArtistResource(&router.RouteGroup, services.NewArtistService(daos.NewArtistDAO(testdata.DB)))
+	ServeArtistResource(router.Group(""), services.NewArtistService(daos.NewArtistDAO(testdata.DB)))
 
 	notFoundError := `{"error_code":"NOT_FOUND", "message":"NOT_FOUND"}`
 	nameRequiredError := `{"error_code":"INVALID_DATA","message":"INVALID_DATA","details":[{"field":"name","error":"cannot be blank"}]}`
@@ -19,7 +19,7 @@ func TestArtist(t *testing.T) {
 	runAPITests(t, []apiTestCase{
 		{"t1 - get an artist", "GET", "/artists/2", "", http.StatusOK, `{"id":2,"name":"Accept"}`},
 		{"t2 - get a nonexisting artist", "GET", "/artists/99999", "", http.StatusNotFound, notFoundError},
-		{"t3 - create an artist", "POST", "/artists", `{"name":"Qiang"}`, http.StatusOK, `{"id": 276, "name":"Qiang"}`},
+		{"t3 - create an artist", "POST", "/artists", `{"name":"Qiang"}`, http.StatusCreated, `{"id": 276, "name":"Qiang"}`},
 		{"t4 - create an artist with validation error", "POST", "/artists", `{"name":""}`, http.StatusBadRequest, nameRequiredError},
 		{"t5 - update an artist", "PUT", "/artists/2", `{"name":"Qiang"}`, http.StatusOK, `{"id": 2, "name":"Qiang"}`},
 		{"t6 - update an artist with validation error", "PUT", "/artists/2", `{"name":""}`, http.StatusBadRequest, nameRequiredError},

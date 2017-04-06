@@ -1,8 +1,6 @@
 package daos
 
 import (
-	"fmt"
-
 	"github.com/ederavilaprado/golang-web-architecture-template/app"
 	"github.com/ederavilaprado/golang-web-architecture-template/models"
 	"github.com/jmoiron/sqlx"
@@ -72,8 +70,6 @@ func (dao *ArtistDAO) Count(rs app.RequestScope) (int, error) {
 // Query retrieves the artist records with the specified offset and limit from the database.
 func (dao *ArtistDAO) Query(rs app.RequestScope, offset, limit int) ([]models.Artist, error) {
 	artists := []models.Artist{}
-	fmt.Printf("=> offset: %+v\n", offset)
-	fmt.Printf("=> limit: %+v\n", limit)
 	err := dao.db.Select(&artists, "SELECT * FROM artist ORDER BY id OFFSET $1 LIMIT $2", offset, limit)
 	return artists, err
 }

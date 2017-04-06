@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/ederavilaprado/golang-web-architecture-template/util"
-	routing "github.com/go-ozzo/ozzo-routing"
+	"github.com/labstack/echo"
 )
 
 const (
@@ -12,9 +12,9 @@ const (
 	MAX_PAGE_SIZE     int = 1000
 )
 
-func getPaginatedListFromRequest(c *routing.Context, count int) *util.PaginatedList {
-	page := parseInt(c.Query("page"), 1)
-	perPage := parseInt(c.Query("per_page"), DEFAULT_PAGE_SIZE)
+func getPaginatedListFromRequest(c echo.Context, count int) *util.PaginatedList {
+	page := parseInt(c.QueryParam("page"), 1)
+	perPage := parseInt(c.QueryParam("per_page"), DEFAULT_PAGE_SIZE)
 	if perPage <= 0 {
 		perPage = DEFAULT_PAGE_SIZE
 	}
