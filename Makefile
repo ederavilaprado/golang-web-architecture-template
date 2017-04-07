@@ -11,15 +11,15 @@ deps:
 	go get -v .
 
 test:
-	go test -p=1 $(PACKAGES)
+	go test -v -p=1 $(PACKAGES)
 
 unit-test:
-	go test $(PACKAGE_WITHOUT_E2E)
+	go test -v $(PACKAGE_WITHOUT_E2E)
 
 cover:
 	echo "mode: count" > coverage-all.out
 	$(foreach pkg,$(PACKAGES), \
-		go test -p=1 -cover -covermode=count -coverprofile=coverage.out ${pkg}; \
+		go test -v -p=1 -cover -covermode=count -coverprofile=coverage.out ${pkg}; \
 		tail -n +2 coverage.out >> coverage-all.out;)
 	go tool cover -html=coverage-all.out
 

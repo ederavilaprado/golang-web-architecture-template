@@ -33,6 +33,7 @@ func init() {
 
 	router.Use(
 		app.Init(logger),
+		app.RequestContextMiddleware(logger),
 		// content.TypeNegotiator(content.JSON),
 		// app.Transactional(testdata.DB),
 	)
