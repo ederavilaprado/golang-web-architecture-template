@@ -6,6 +6,8 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/labstack/echo"
+	uuid "github.com/satori/go.uuid"
 )
 
 // RequestScope contains the application-specific information that are carried around in a request.
@@ -82,5 +84,61 @@ func newRequestScope(now time.Time, logger *logrus.Logger, request *http.Request
 		Logger:    l,
 		now:       now,
 		requestID: requestID,
+	}
+}
+
+type RequestContext interface {
+	Start() time.Time
+	RequestID() string
+	echo.Context
+}
+
+type requestContext struct {
+	crossRequestID *string
+	requestID      string
+	start          time.Time // the time when the request is being processed
+	echo.Context
+}
+
+func (uc *requestContext) Start() time.Time {
+	return uc.start
+}
+
+func (uc *requestContext) RequestID() string {
+	return uc.requestID
+}
+
+func newRequestContext(now time.Time, logger *logrus.Logger, c echo.Context) RequestContext {
+	// l := NewLogger(logger, logrus.Fields{})
+	uc := &requestContext{
+		requestID: uuid.NewV4().String(),
+		start:     now,
+		Context:   c,
+	}
+	// Get requestID from header
+	if crossRequestID := c.Request().Header.Get("X-Request-Id"); crossRequestID != "" {
+		uc.crossRequestID = &crossRequestID
+	}
+
+	// TODO: set te requestID to the logger
+	// if requestID != "" {
+	// 	l.SetField("RequestID", requestID)
+	// }
+	// TODO: set crossRequestID to the logger
+
+	return uc
+}
+
+func GetRequestContext(c echo.Context) RequestContext {
+	return c.(RequestContext)
+}
+
+func RequestContextMiddleware(logger *logrus.Logger) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			now := time.Now()
+			uc := newRequestContext(now, logger, c)
+			return next(uc)
+		}
 	}
 }

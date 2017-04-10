@@ -49,7 +49,6 @@ func main() {
 }
 
 func buildRouter(logger *logrus.Logger, db *sqlx.DB) *echo.Echo {
-
 	router := echo.New()
 
 	// When running in debug mode,the returned JSON is always "pretty printed"
@@ -64,13 +63,9 @@ func buildRouter(logger *logrus.Logger, db *sqlx.DB) *echo.Echo {
 		return c.String(http.StatusOK, app.Version)
 	})
 
-	// router.To("GET,HEAD", "/health", func(c *routing.Context) error {
-	// 	c.Abort() // skip all other middlewares/handlers
-	// 	return c.Write("OK " + app.Version)
-	// })
-
 	router.Use(
 		app.Init(logger),
+		app.RequestContextMiddleware(logger),
 		middleware.RecoverWithConfig(middleware.RecoverConfig{
 			StackSize: 1 << 10, // 1 KB
 		}),
@@ -82,13 +77,11 @@ func buildRouter(logger *logrus.Logger, db *sqlx.DB) *echo.Echo {
 		c.HTML(http.StatusInternalServerError, "Internal Server Error... from panic")
 	}
 
-	// 	// content.TypeNegotiator(content.JSON),
 	// 	cors.Handler(cors.Options{
 	// 		AllowOrigins: "*",
 	// 		AllowHeaders: "*",
 	// 		AllowMethods: "*",
 	// 	}),
-	//
 	// 	// TODO: create an middleware helper for transaction...
 	// 	// app.Transactional(db),
 	// )
@@ -96,7 +89,6 @@ func buildRouter(logger *logrus.Logger, db *sqlx.DB) *echo.Echo {
 	rg := router.Group("/v1")
 
 	// TODO: JWT + Session here...
-
 	// rg.Post("/auth", apis.Auth(app.Config.JWTSigningKey))
 	// rg.Use(auth.JWT(app.Config.JWTVerificationKey, auth.JWTOptions{
 	// 	SigningMethod: app.Config.JWTSigningMethod,
@@ -104,7 +96,6 @@ func buildRouter(logger *logrus.Logger, db *sqlx.DB) *echo.Echo {
 	// }))
 
 	artistDAO := daos.NewArtistDAO(db)
-
 	apis.ServeArtistResource(rg, services.NewArtistService(artistDAO))
 
 	// wire up more resource APIs here

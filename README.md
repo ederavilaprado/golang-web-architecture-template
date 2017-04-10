@@ -4,7 +4,7 @@
 
 ## TODO
 
-- [ ] request scope + reques id
+- [x] request scope + reques id
 - [ ] log for request/response
 - [ ] log to file
 - [ ] struct, params and querystring validation
@@ -22,7 +22,7 @@
 - [x] Handling panic errors
 - [ ] Add cors
 - [ ] logger to echo.logger
-- [ ] Context middleware
+- [x] Context middleware
 
 
 ```bash

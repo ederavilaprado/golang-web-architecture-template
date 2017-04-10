@@ -43,7 +43,7 @@ func LoadAppFlags() {
 func Init(logger *logrus.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(rc echo.Context) error {
-			now := time.Now()
+			// now := time.Now()
 
 			// TODO: I think it's better to change the name of this function, it's no clear.
 
@@ -54,11 +54,11 @@ func Init(logger *logrus.Logger) echo.MiddlewareFunc {
 			// 	BytesWritten:   0,
 			// }
 
-			ac := newRequestScope(now, logger, rc.Request())
+			// ac := newRequestScope(now, logger, rc.Request())
 
 			// TODO: we dont need this... we should use the context scope way of the echo lib...
 			// https://echo.labstack.com/guide/context
-			rc.Set("Context", ac)
+			// rc.Set("Context", ac)
 
 			// TODO: improve this error handler
 			if err := next(rc); err != nil {

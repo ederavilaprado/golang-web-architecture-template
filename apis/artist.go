@@ -12,12 +12,12 @@ import (
 type (
 	// artistService specifies the interface for the artist service needed by artistResource.
 	artistService interface {
-		Get(rs app.RequestScope, id int) (*models.Artist, error)
-		Query(rs app.RequestScope, offset, limit int) ([]models.Artist, error)
-		Count(rs app.RequestScope) (int, error)
-		Create(rs app.RequestScope, model *models.Artist) (*models.Artist, error)
-		Update(rs app.RequestScope, id int, model *models.Artist) (*models.Artist, error)
-		Delete(rs app.RequestScope, id int) (*models.Artist, error)
+		Get(rs app.RequestContext, id int) (*models.Artist, error)
+		Query(rs app.RequestContext, offset, limit int) ([]models.Artist, error)
+		Count(rs app.RequestContext) (int, error)
+		Create(rs app.RequestContext, model *models.Artist) (*models.Artist, error)
+		Update(rs app.RequestContext, id int, model *models.Artist) (*models.Artist, error)
+		Delete(rs app.RequestContext, id int) (*models.Artist, error)
 	}
 
 	// artistResource defines the handlers for the CRUD APIs.
@@ -41,7 +41,7 @@ func (r *artistResource) get(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	artist, err := r.service.Get(app.GetRequestScope(c), id)
+	artist, err := r.service.Get(app.GetRequestContext(c), id)
 	if err != nil {
 		return err
 	}
@@ -49,13 +49,13 @@ func (r *artistResource) get(c echo.Context) error {
 }
 
 func (r *artistResource) query(c echo.Context) error {
-	rs := app.GetRequestScope(c)
+	rs := app.GetRequestContext(c)
 	count, err := r.service.Count(rs)
 	if err != nil {
 		return err
 	}
 	paginatedList := getPaginatedListFromRequest(c, count)
-	items, err := r.service.Query(app.GetRequestScope(c), paginatedList.Offset(), paginatedList.Limit())
+	items, err := r.service.Query(app.GetRequestContext(c), paginatedList.Offset(), paginatedList.Limit())
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (r *artistResource) create(c echo.Context) error {
 	if err := c.Bind(payload); err != nil {
 		return err
 	}
-	artist, err := r.service.Create(app.GetRequestScope(c), payload)
+	artist, err := r.service.Create(app.GetRequestContext(c), payload)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (r *artistResource) update(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	rs := app.GetRequestScope(c)
+	rs := app.GetRequestContext(c)
 	model, err := r.service.Get(rs, id)
 	if err != nil {
 		return err
@@ -100,7 +100,7 @@ func (r *artistResource) delete(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	response, err := r.service.Delete(app.GetRequestScope(c), id)
+	response, err := r.service.Delete(app.GetRequestContext(c), id)
 	if err != nil {
 		return err
 	}

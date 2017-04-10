@@ -107,7 +107,7 @@ type mockArtistDAO struct {
 	records []models.Artist
 }
 
-func (m *mockArtistDAO) Get(rs app.RequestScope, id int) (*models.Artist, error) {
+func (m *mockArtistDAO) Get(rs app.RequestContext, id int) (*models.Artist, error) {
 	for _, record := range m.records {
 		if record.Id == id {
 			return &record, nil
@@ -116,15 +116,15 @@ func (m *mockArtistDAO) Get(rs app.RequestScope, id int) (*models.Artist, error)
 	return nil, errors.New("not found")
 }
 
-func (m *mockArtistDAO) Query(rs app.RequestScope, offset, limit int) ([]models.Artist, error) {
+func (m *mockArtistDAO) Query(rs app.RequestContext, offset, limit int) ([]models.Artist, error) {
 	return m.records[offset : offset+limit], nil
 }
 
-func (m *mockArtistDAO) Count(rs app.RequestScope) (int, error) {
+func (m *mockArtistDAO) Count(rs app.RequestContext) (int, error) {
 	return len(m.records), nil
 }
 
-func (m *mockArtistDAO) Create(rs app.RequestScope, artist *models.Artist) error {
+func (m *mockArtistDAO) Create(rs app.RequestContext, artist *models.Artist) error {
 	if artist.Id != 0 {
 		return errors.New("Id cannot be set")
 	}
@@ -133,7 +133,7 @@ func (m *mockArtistDAO) Create(rs app.RequestScope, artist *models.Artist) error
 	return nil
 }
 
-func (m *mockArtistDAO) Update(rs app.RequestScope, id int, artist *models.Artist) error {
+func (m *mockArtistDAO) Update(rs app.RequestContext, id int, artist *models.Artist) error {
 	artist.Id = id
 	for i, record := range m.records {
 		if record.Id == id {
@@ -144,7 +144,7 @@ func (m *mockArtistDAO) Update(rs app.RequestScope, id int, artist *models.Artis
 	return errors.New("not found")
 }
 
-func (m *mockArtistDAO) Delete(rs app.RequestScope, id int) error {
+func (m *mockArtistDAO) Delete(rs app.RequestContext, id int) error {
 	for i, record := range m.records {
 		if record.Id == id {
 			m.records = append(m.records[:i], m.records[i+1:]...)
